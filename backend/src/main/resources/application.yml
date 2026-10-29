@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: orbitlink-signup
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5435/orbitlink}
+    username: ${DATABASE_USER:orbitlink}
+    password: ${DATABASE_PASSWORD:orbitlink}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6380}
+      timeout: 500ms
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 8080
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+orbitlink:
+  # H3 resolution 5: ~253 km² average cell area. See README "H3 resolution".
+  h3-resolution: 5
+  default-cell-capacity: ${DEFAULT_CELL_CAPACITY:20}
+  admin-token: ${ADMIN_TOKEN:dev-admin-token}
+  demo-seed: ${DEMO_SEED:false}
+  payments:
+    # Fake provider behaviour. timeout-rate is split evenly between "timed out before the
+    # provider saw it" and "provider charged, but the response was lost".
+    timeout-rate: ${PAYMENT_TIMEOUT_RATE:0.1}
+    client-timeout: ${PAYMENT_CLIENT_TIMEOUT:1500ms}
+    latency-min: 20ms
+    latency-max: 80ms
+  reconciliation:
+    interval: PT10S
+    pending-older-than: PT20S
+    max-attempts: 3
+  outbox:
+    interval: PT2S
+    batch-size: 50
+  rate-limit:
+    enabled: ${RATE_LIMIT_ENABLED:true}
+    # Only honour X-Forwarded-For behind a proxy you control; otherwise clients can spoof it.
+    trust-forwarded-for: ${TRUST_FORWARDED_FOR:false}
+    per-ip:
+      capacity: ${RATE_LIMIT_IP_CAPACITY:40}
+      refill-per-second: ${RATE_LIMIT_IP_REFILL:10}
+    per-account:
+      capacity: 5
+      refill-per-second: 0.1

@@ -1,0 +1,8 @@
+backend/target/
+web/node_modules/
+web/dist/
+loadtest/results/*.html
+*.log
+.env
+.idea/
+.vscode/
