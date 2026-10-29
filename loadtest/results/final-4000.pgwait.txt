@@ -1,0 +1,83 @@
+LWLock:WALWrite active|10
+CPU:running active|6
+CPU:running idle in transaction|6
+Client:ClientRead idle|6
+Client:ClientRead idle in transaction|5
+CPU:running idle|3
+Lock:transactionid active|2
+IO:WALSync active|1
+LWLock:ProcArray active|1
+--
+Client:ClientRead idle|9
+Client:ClientRead idle in transaction|7
+LWLock:WALWrite active|7
+CPU:running idle in transaction|6
+CPU:running idle|4
+Lock:transactionid active|2
+Client:ClientRead active|2
+CPU:running active|2
+IO:WALSync active|1
+--
+Client:ClientRead idle|17
+Client:ClientRead idle in transaction|14
+Client:ClientRead active|3
+LWLock:WALWrite active|3
+CPU:running idle in transaction|2
+CPU:running idle|1
+--
+Client:ClientRead idle|13
+CPU:running idle|8
+CPU:running idle in transaction|6
+Client:ClientRead idle in transaction|6
+Lock:transactionid active|3
+CPU:running active|2
+Client:ClientRead active|1
+LWLock:WALWrite active|1
+--
+Client:ClientRead idle|12
+Client:ClientRead idle in transaction|8
+LWLock:WALWrite active|6
+CPU:running active|4
+CPU:running idle in transaction|4
+Client:ClientRead active|4
+IO:WALSync active|1
+Lock:transactionid active|1
+--
+LWLock:WALWrite active|28
+Client:ClientRead idle|3
+CPU:running active|3
+Lock:transactionid active|2
+CPU:running idle|2
+IO:WALSync active|1
+CPU:running idle in transaction|1
+--
+Client:ClientRead idle in transaction|10
+CPU:running active|7
+Client:ClientRead idle|7
+LWLock:WALWrite active|6
+CPU:running idle|4
+CPU:running idle in transaction|4
+Lock:transactionid active|1
+IO:WALSync active|1
+--
+Client:ClientRead idle|23
+Client:ClientRead idle in transaction|16
+Lock:transactionid active|1
+--
+Client:ClientRead idle|11
+LWLock:WALWrite active|10
+Client:ClientRead idle in transaction|7
+CPU:running idle|6
+CPU:running idle in transaction|2
+Client:ClientRead active|2
+IO:WALSync active|1
+CPU:running active|1
+--
+CPU:running idle in transaction|12
+Client:ClientRead idle in transaction|10
+Client:ClientRead idle|9
+CPU:running idle|4
+LWLock:WALWrite active|3
+IO:WALSync active|1
+Lock:transactionid active|1
+--

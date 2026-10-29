@@ -1,0 +1,68 @@
+Client:ClientRead idle|3
+Client:ClientRead idle in transaction|3
+CPU:running active|1
+CPU:running idle in transaction|1
+IO:WALSync active|1
+LWLock:WALWrite active|1
+--
+CPU:running active|3
+CPU:running idle|1
+CPU:running idle in transaction|1
+Client:ClientRead active|1
+Client:ClientRead idle|1
+Client:ClientRead idle in transaction|1
+IO:WALSync active|1
+LWLock:WALWrite active|1
+--
+Client:ClientRead active|2
+Client:ClientRead idle|2
+Client:ClientRead idle in transaction|2
+LWLock:WALWrite active|2
+CPU:running active|1
+IO:WALSync active|1
+--
+CPU:running active|4
+Client:ClientRead idle|2
+LWLock:WALWrite active|2
+Client:ClientRead idle in transaction|1
+IO:WALSync active|1
+--
+LWLock:WALWrite active|4
+Client:ClientRead active|2
+CPU:running active|1
+CPU:running idle|1
+Client:ClientRead idle|1
+IO:WALSync active|1
+--
+CPU:running active|3
+Client:ClientRead idle in transaction|2
+CPU:running idle in transaction|1
+IO:WALSync active|1
+LWLock:WALWrite active|1
+Client:ClientRead idle|1
+CPU:running idle|1
+--
+CPU:running active|3
+LWLock:WALWrite active|3
+Client:ClientRead active|2
+Client:ClientRead idle|1
+IO:WALSync active|1
+--
+LWLock:WALWrite active|6
+CPU:running idle in transaction|1
+Client:ClientRead active|1
+Client:ClientRead idle in transaction|1
+IO:WALSync active|1
+--
+LWLock:WALWrite active|5
+CPU:running active|1
+CPU:running idle|1
+CPU:running idle in transaction|1
+Client:ClientRead idle in transaction|1
+IO:WALSync active|1
+--
+LWLock:WALWrite active|6
+CPU:running active|2
+CPU:running idle in transaction|1
+IO:WALSync active|1
+--

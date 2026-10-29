@@ -1,0 +1,85 @@
+CPU:running active|10
+Client:ClientRead idle|7
+Client:ClientRead idle in transaction|6
+LWLock:WALWrite active|6
+CPU:running idle|3
+CPU:running idle in transaction|3
+Client:ClientRead active|3
+IO:WALSync active|1
+LWLock:WALWrite idle in transaction|1
+--
+Client:ClientRead idle in transaction|13
+LWLock:WALWrite active|9
+CPU:running active|6
+CPU:running idle in transaction|5
+Client:ClientRead idle|3
+Lock:transactionid active|2
+Client:ClientRead active|1
+IO:WALSync active|1
+--
+Client:ClientRead idle in transaction|19
+Client:ClientRead idle|13
+Lock:transactionid active|3
+Client:ClientRead active|2
+CPU:running idle|1
+IO:WALSync active|1
+LWLock:WALWrite active|1
+--
+Client:ClientRead idle in transaction|20
+Client:ClientRead idle|5
+LWLock:WALWrite active|4
+Client:ClientRead active|4
+Lock:transactionid active|2
+CPU:running idle|2
+IO:WALSync active|1
+LWLock:WALWrite idle in transaction|1
+CPU:running active|1
+--
+LWLock:WALWrite active|12
+CPU:running active|6
+Client:ClientRead active|5
+CPU:running idle in transaction|4
+CPU:running idle|4
+Lock:transactionid active|3
+Client:ClientRead idle|3
+Client:ClientRead idle in transaction|2
+IO:WALSync active|1
+--
+Client:ClientRead idle|24
+Client:ClientRead idle in transaction|8
+CPU:running idle in transaction|3
+LWLock:WALWrite active|2
+Client:ClientRead active|1
+CPU:running idle|1
+IO:WALSync active|1
+--
+Client:ClientRead idle in transaction|10
+LWLock:WALWrite active|8
+Client:ClientRead active|8
+CPU:running idle in transaction|4
+Client:ClientRead idle|3
+CPU:running idle|3
+CPU:running active|3
+IO:WALSync active|1
+--
+Client:ClientRead idle|18
+Client:ClientRead idle in transaction|17
+CPU:running idle|2
+CPU:running idle in transaction|1
+IO:WALSync active|1
+Lock:transactionid active|1
+--
+LWLock:WALWrite active|10
+Client:ClientRead idle in transaction|9
+CPU:running idle|5
+CPU:running idle in transaction|4
+CPU:running active|3
+Client:ClientRead idle|3
+Client:ClientRead active|2
+Lock:transactionid active|2
+IO:WALSync active|1
+LWLock:WALWrite idle in transaction|1
+--
+Client:ClientRead idle|37
+Client:ClientRead idle in transaction|3
+--

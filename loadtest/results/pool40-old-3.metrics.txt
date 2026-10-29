@@ -1,0 +1,3 @@
+hikaricp.connections.active 40.0
+hikaricp.connections.pending 2742.0
+hikaricp.connections.max 40.0

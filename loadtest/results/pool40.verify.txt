@@ -1,0 +1,26 @@
+cells where reserved exceeds capacity (oversell):
+ h3_index | capacity | reserved 
+----------+----------+----------
+(0 rows)
+
+cells whose reserved counter disagrees with live orders:
+ h3_index | reserved | live_orders 
+----------+----------+-------------
+(0 rows)
+
+cells whose waitlist positions are not exactly 1..waitlist_next (gaps or duplicates):
+ h3_index | waitlist_next | entries | distinct_positions 
+----------+---------------+---------+--------------------
+(0 rows)
+
+cells with a free slot AND people waiting (queue jumped):
+ h3_index | capacity | reserved | waiting 
+----------+----------+----------+---------
+(0 rows)
+
+totals:
+ cells | orders | confirmed | pending_payment | waitlist_entries | idempotency_keys 
+-------+--------+-----------+-----------------+------------------+------------------
+ 16981 |  33260 |     30297 |            2963 |            72544 |           105804
+(1 row)
+

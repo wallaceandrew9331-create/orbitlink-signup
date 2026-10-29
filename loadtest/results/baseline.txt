@@ -1,0 +1,4 @@
+availability: p(50)=1.3ms p(95)=2.0ms p(99)=3.8ms max=101.7ms failed=0.00%
+orders:       p(50)=6.9ms p(95)=90.1ms p(99)=1571.8ms max=1597.2ms ok=100.00%
+reserved=7580 waitlisted=13770 replay_mismatch=0
+abuser 429s=3962 iterations=133050 dropped=0

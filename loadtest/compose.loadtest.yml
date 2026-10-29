@@ -1,0 +1,5 @@
+# Overrides for load tests: no demo seed, so every run starts from empty tables.
+services:
+  api:
+    environment:
+      DEMO_SEED: "false"
