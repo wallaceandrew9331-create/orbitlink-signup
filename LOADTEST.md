@@ -188,7 +188,7 @@ In rough order of payoff:
 ## Reproducing
 
 ```bash
-./loadtest/run.sh baseline                                          # 1,500 lookups/s + 300 orders/s
+DB_POOL_SIZE=10 ./loadtest/run.sh baseline                          # 1,500 lookups/s + 300 orders/s, as recorded
 DB_POOL_SIZE=10 PEAK_LOOKUPS=6000 PEAK_ORDERS=1500 ./loadtest/run.sh stress
 PEAK_LOOKUPS=6000 PEAK_ORDERS=1500 ./loadtest/run.sh pool40          # default pool is now 40
 python loadtest/summarize.py baseline stress pool40                  # markdown table + wait states
