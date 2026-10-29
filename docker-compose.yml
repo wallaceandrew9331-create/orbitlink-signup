@@ -1,0 +1,48 @@
+name: orbitlink
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: orbitlink
+      POSTGRES_USER: orbitlink
+      POSTGRES_PASSWORD: orbitlink
+    ports: ["127.0.0.1:5435:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orbitlink -d orbitlink"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:7-alpine
+    ports: ["127.0.0.1:6380:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/orbitlink
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      DEMO_SEED: "true"
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev-admin-token}
+      # nginx in front of the API overwrites X-Forwarded-For with the real client address.
+      TRUST_FORWARDED_FOR: "true"
+    ports: ["127.0.0.1:8082:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  web:
+    build: ./web
+    ports: ["8083:80"]
+    depends_on: [api]
+
+volumes:
+  pgdata:
