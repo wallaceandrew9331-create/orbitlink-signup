@@ -21,6 +21,9 @@ public class CellRepository {
         }
     }
 
+    /** A waitlist position plus how many positions had been promoted when it was handed out. */
+    public record WaitlistSlot(long position, long promoted) {}
+
     private static final String COLUMNS = "h3_index, capacity, reserved, waitlist_next, waitlist_promoted";
 
     private final JdbcClient jdbc;
@@ -71,13 +74,13 @@ public class CellRepository {
      * freed between a failed {@link #tryReserve} and this call it returns empty and the caller
      * goes back to reserving, so nobody is queued behind an empty slot.
      */
-    public Optional<Long> nextWaitlistPositionIfFull(String h3Index) {
+    public Optional<WaitlistSlot> nextWaitlistPositionIfFull(String h3Index) {
         return jdbc.sql("""
                         UPDATE cells SET waitlist_next = waitlist_next + 1
                         WHERE h3_index = ? AND reserved >= capacity
-                        RETURNING waitlist_next""")
+                        RETURNING waitlist_next AS position, waitlist_promoted AS promoted""")
                 .param(h3Index)
-                .query(Long.class)
+                .query(WaitlistSlot.class)
                 .optional();
     }
 

@@ -65,36 +65,45 @@ public class OrderService {
 
         String email = req.normalizedEmail();
         String h3 = grid.cellFor(req.lat(), req.lng());
-        cells.ensureExists(h3, defaultCapacity);
 
-        if (orders.findLive(h3, email).isPresent()) {
-            throw new AlreadyOrderedException();
-        }
-        Optional<WaitlistEntry> alreadyWaiting = waitlist.findWaiting(h3, email);
-        if (alreadyWaiting.isPresent()) {
-            idempotency.attachWaitlistEntry(idempotencyKey, alreadyWaiting.get().id());
-            return waitlisted(alreadyWaiting.get(), false);
+        // Every statement below runs while this transaction holds a pooled connection (and, from
+        // tryReserve on, the cell's row lock), so the path is kept to as few round trips as
+        // possible. LOADTEST.md has the measurements behind this.
+        Optional<OrderRepository.Existing> existing = orders.findExisting(h3, email);
+        if (existing.isPresent()) {
+            if (existing.get().waitlistEntryId() == null) {
+                throw new AlreadyOrderedException();
+            }
+            WaitlistEntry entry = waitlist.find(existing.get().waitlistEntryId()).orElseThrow();
+            idempotency.attachWaitlistEntry(idempotencyKey, entry.id());
+            return waitlisted(entry, false);
         }
 
+        boolean cellCreated = false;
         for (int attempt = 0; attempt < MAX_PLACEMENT_ATTEMPTS; attempt++) {
             if (cells.tryReserve(h3)) {
                 Market market = grid.market(h3);
-                Order order = new Order(UUID.randomUUID(), h3, email, req.fullName().strip(), req.locale(),
+                Order order = orders.insert(new Order(UUID.randomUUID(), h3, email, req.fullName().strip(), req.locale(),
                         Order.Status.RESERVED, Order.PaymentStatus.NONE, 0, req.paymentToken(),
-                        market.depositMinor(), market.currency(), Order.Source.DIRECT, null);
-                orders.insert(order);
+                        market.depositMinor(), market.currency(), Order.Source.DIRECT, null));
                 idempotency.attachOrder(idempotencyKey, order.id());
-                return new Reserved(orders.find(order.id()).orElseThrow(), false);
+                return new Reserved(order, false);
             }
-            Optional<Long> position = cells.nextWaitlistPositionIfFull(h3);
-            if (position.isPresent()) {
-                WaitlistEntry entry = waitlist.insert(h3, position.get(), email, req.fullName().strip(), req.locale());
+            Optional<CellRepository.WaitlistSlot> slot = cells.nextWaitlistPositionIfFull(h3);
+            if (slot.isPresent()) {
+                WaitlistEntry entry = waitlist.insert(h3, slot.get().position(), email, req.fullName().strip(), req.locale());
                 idempotency.attachWaitlistEntry(idempotencyKey, entry.id());
                 outbox.enqueue(Outbox.Kind.WAITLIST_JOINED, email,
                         Map.of("cell", h3, "position", entry.position(), "locale", entry.locale()));
-                return waitlisted(entry, false);
+                return new Waitlisted(entry, slot.get().position() - slot.get().promoted() - 1, false);
             }
-            // A slot was freed between the two statements; go round and try to take it.
+            if (!cellCreated) {
+                // Neither statement matched a row: most likely the first order ever in this cell.
+                // Creating the cell lazily here keeps that INSERT off the common path.
+                cells.ensureExists(h3, defaultCapacity);
+                cellCreated = true;
+            }
+            // Otherwise a slot was freed between the two statements; go round and try to take it.
         }
         throw new CapacityContentionException();
     }

@@ -21,25 +21,40 @@ public class OrderRepository {
         this.jdbc = jdbc;
     }
 
-    public void insert(Order o) {
-        jdbc.sql("""
+    /** Something this customer already holds in a cell: an order (entry id null) or a waitlist spot. */
+    public record Existing(Long waitlistEntryId) {}
+
+    public Order insert(Order o) {
+        return jdbc.sql("""
                         INSERT INTO orders (id, h3_index, email, full_name, locale, status, payment_status,
                                             payment_token, deposit_minor, currency, source)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        RETURNING""" + " " + COLUMNS)
                 .params(o.id(), o.h3Index(), o.email(), o.fullName(), o.locale(), o.status().name(),
                         o.paymentStatus().name(), o.paymentToken(), o.depositMinor(), o.currency(), o.source().name())
-                .update();
+                .query(Order.class)
+                .single();
+    }
+
+    /**
+     * Live order or waiting entry for this email in this cell, in one round trip. It reads two
+     * tables, which is why it isn't split across the two repositories.
+     */
+    public Optional<Existing> findExisting(String h3Index, String email) {
+        return jdbc.sql("""
+                        SELECT NULL::bigint AS waitlist_entry_id FROM orders
+                        WHERE h3_index = ? AND email = ? AND status <> 'CANCELLED'
+                        UNION ALL
+                        SELECT id FROM waitlist_entries
+                        WHERE h3_index = ? AND email = ? AND status = 'WAITING'
+                        LIMIT 1""")
+                .params(h3Index, email, h3Index, email)
+                .query(Existing.class)
+                .optional();
     }
 
     public Optional<Order> find(UUID id) {
         return jdbc.sql("SELECT " + COLUMNS + " FROM orders WHERE id = ?").param(id).query(Order.class).optional();
-    }
-
-    public Optional<Order> findLive(String h3Index, String email) {
-        return jdbc.sql("SELECT " + COLUMNS + " FROM orders WHERE h3_index = ? AND email = ? AND status <> 'CANCELLED'")
-                .params(h3Index, email)
-                .query(Order.class)
-                .optional();
     }
 
     public void setPaymentToken(UUID id, String token) {

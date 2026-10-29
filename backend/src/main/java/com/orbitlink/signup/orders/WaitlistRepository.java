@@ -35,13 +35,6 @@ public class WaitlistRepository {
                 .optional();
     }
 
-    public Optional<WaitlistEntry> findWaiting(String h3Index, String email) {
-        return jdbc.sql("SELECT " + COLUMNS + " FROM waitlist_entries WHERE h3_index = ? AND email = ? AND status = 'WAITING'")
-                .params(h3Index, email)
-                .query(WaitlistEntry.class)
-                .optional();
-    }
-
     /**
      * The head of the queue. No FOR UPDATE here: every waitlist mutation for a cell happens while
      * holding that cell's row lock, so the cell lock already serialises promotion.
