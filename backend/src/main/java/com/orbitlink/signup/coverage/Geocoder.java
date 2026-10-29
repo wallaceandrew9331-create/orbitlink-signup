@@ -19,6 +19,7 @@ public class Geocoder {
     private static final List<Place> PLACES = List.of(
             new Place("120 Beale St, Memphis, TN 38103, USA", 35.1395, -90.0526),
             new Place("4410 Summer Ave, Memphis, TN 38122, USA", 35.1495, -89.9310),
+            new Place("8840 Stateline Rd, Southaven, MS 38671, USA", 34.9889, -90.0126),
             new Place("701 Congress Ave, Austin, TX 78701, USA", 30.2700, -97.7431),
             new Place("1600 Champa St, Denver, CO 80202, USA", 39.7475, -104.9930),
             new Place("400 Pine St, Seattle, WA 98101, USA", 47.6114, -122.3370),
